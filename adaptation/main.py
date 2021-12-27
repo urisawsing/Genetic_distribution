@@ -25,11 +25,18 @@ n_select=10
 
 
 #generation of the initial population
+mu_ne, sigma_ne = 1000, 1000
+mu_mut, sigma_mut = 1e-3, 0.01
+n=10
+
 population=[]
 for i in range(n):
-  individual=[]
-  for j in range(vec_size):
-    individual[j]=dsitributions.generate(ndist,j)
+  individual=[0,0,0]
+  for j in range(len(individual)):
+  	individual[j]=int(abs(np.random.normal(mu_ne, sigma_ne)))
+  	individual[j+1]=rnd.randint(0,100)/100
+  	individual[j+2]=np.random.normal(mu_mut, sigma_mut)
+  	break
   population.append(individual)
 
 fitnesses=np.zeros(n)
