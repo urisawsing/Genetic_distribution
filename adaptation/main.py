@@ -1,5 +1,5 @@
 import numpy as np
-from distributions import *
+import genetic_functions as genetic
 import pandas as pd
 import sys
 
@@ -31,3 +31,35 @@ for i in range(n):
   for j in range(vec_size):
     individual[j]=dsitributions.generate(ndist,j)
   population.append(individual)
+
+fitnesses=np.zeros(n)
+  
+  
+#begin iterations 
+
+while (iter<niter):
+  
+  #calculate fitness
+  
+  for i in range(n):
+    if fitnesses[i]<=0:
+      fitnesses[i]=genetic.fitness(population[i])
+    else:  
+      
+  #calculate next generation
+  
+  temp_population,best_ind = next_generation(population,n_elit, n_select, n_cross, n_mut)
+  
+  #print every some steps which is the best fitness
+  if iter % (niter/10) == 0 :
+    print("Generation", iter, "with a best fitness equals to", best_ind[0])
+   
+  #writing the new population into the old variable
+  population = temp_population
+  #updating iteration
+  iter=iter+1
+  
+print("Exited Genetic algorithm")
+print("Best individual with fitness",best_ind[0],"and parameters",best_ind)
+  
+  
