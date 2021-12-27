@@ -41,7 +41,12 @@ for i in range(n):
   population.append(individual)
 
 fitnesses=np.zeros(n)
-  
+
+def fitness_sort(ind):
+	return ind[3]
+
+for i in population:
+	population.sort(reverse=True, key=fitness_sort)
   
 #begin iterations 
 
