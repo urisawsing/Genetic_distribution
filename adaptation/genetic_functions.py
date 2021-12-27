@@ -6,8 +6,22 @@ def mutation():
 def fitness(Ne, s, mu):
   k=(4*Ne*s*mu)/(1-e^(-4*Ne*s))
   return k
-def elit_cast():
-def cast():
+
+def elit_cast(population,n_elit):
+  elit_people=[]
+  for i in range(n_elit):
+    elit_people.append(population[i])
+  return elit_people
+
+
+def cast(population,n_elit):
+  casted_people=[]
+  p_survive=[]
+  for i in range(n_elit,len(population)):
+    p_survive[i]=random.random()*population[i][3]
+ '''
+ continuar aquí
+ '''
 def cross():
 def mutate():
 
