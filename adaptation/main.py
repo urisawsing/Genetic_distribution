@@ -31,11 +31,12 @@ n=10
 
 population=[]
 for i in range(n):
-  individual=[0,0,0]
+  individual=[0,0,0,0]
   for j in range(len(individual)):
-  	individual[j]=int(abs(np.random.normal(mu_ne, sigma_ne)))
+  	individual[j]=int(abs(np.random.normal(mu_ne,sigma_ne)))
   	individual[j+1]=rnd.randint(0,100)/100
-  	individual[j+2]=np.random.normal(mu_mut, sigma_mut)
+  	individual[j+2]=abs(np.random.normal(mu_mut, sigma_mut))
+  	individual[j+3]=fitness(individual[j],individual[j+1],individual[j+2])
   	break
   population.append(individual)
 
