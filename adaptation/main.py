@@ -24,9 +24,6 @@ n_select=10
 
 
 
-
- 
-
 #generation of the initial population
 population=[]
 for i in range(n):
