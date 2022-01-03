@@ -8,16 +8,20 @@ import mystuff as ms
 '''
 Parameters
     ----------
-    N:  integer
-        population size
-    sel:integer
-        selected individuals to cross
+    N:      integer
+            population size
+    elite:  integer
+            selected individuals to cross
         !! mus be pair
+    bros:   integer
+            number of siblings to generate in each crossover
     ----------
 '''
 
 N=50
-sel=10
+elite=10
+bros=2
+
 
 #1. Setting the original population
 population=ms.population_generator(N)
@@ -34,15 +38,17 @@ gamets=ms.mutation(selected)
 prog_1=gamets[0:sel/2]
 prog_2=gamets[sel:(sel/2)+1]
 
-#5. Crossover of the gamets generating two siblings
-offspring_1=ms.crossover(prog_1, prog_2)
-offspring_2=ms.crossover(prog_1, prog_2)
+#5. Crossover of the gamets generating the specifed siblings
+offspring=[]
+for i in range(bros):
+  birth=crossover(prog_1, prog_2)
+  offspring.append(birth)
 
 #6. Adding variation by migration (new random generated population)
 migrants=ms.population_generator(N-2*sel)
 
 #7. Setting the new population
-new_population=offspring_1+offspring_2+migrants
+new_population=offspring+migrants
 for i in new_population:
   new_population.sort(reverse=True, key=ms.fitness_sort)
 
