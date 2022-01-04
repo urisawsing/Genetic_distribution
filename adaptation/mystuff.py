@@ -5,12 +5,52 @@ import matplotlib.pyplot as plt
 import math
 
 
+def saving_data(saved,population,step):
+  for i in range(len(saved)):
+    saved[i][step]=population[i][3]
+
+
+
+
 def fitness(Ne, s, mu):
   try:
     k=(4*Ne*s*mu)/(1-math.exp(-4*Ne*s))
   except ZeroDivisionError:
     k=0
   return k
+
+
+
+def plot_best_fitness(generations,population,fitnesses):
+  txt= 'Parameter values of the best solution:'+str(population[0])
+
+  fig = plt.figure()
+  ax = plt.axes()
+  ax.plot(generations, fitnesses, linestyle='dashdot', color='orangered')
+  ax.set(xlabel='Generations', ylabel='Fitness evolution',
+         title='Genetic Algorith: optimitzation of the K adaptation value');
+  fig.text(.5, .05, txt, ha='center')
+  plt.show()
+
+
+def plot_all_fitness(savings,generations,n_elite,n_progenie):
+  #txt= 'Parameter values of the best solution:'+str(population[0])
+
+  fig = plt.figure()
+  for i in range(len(savings)):
+    if i < n_elite:
+      plt.plot(generations, savings[:][i], linestyle='solid', color='orangered',)
+    if i>n_elite and i<25 :
+      plt.plot(generations, savings[:][i], linestyle='dotted', color='green',alpha=0.8)
+    if i>n_progenie:
+      plt.plot(generations, savings[:][i], linestyle='dotted', color='blue',alpha=0.6)
+  plt.show()
+  '''  
+  ax.set(xlabel='Generations', ylabel='Fitness evolution',
+         title='Genetic Algorith: optimitzation of the K adaptation value');
+  fig.text(.5, .05, txt, ha='center')
+  '''
+
 
 
 def fitness_sort(n):
@@ -69,3 +109,4 @@ def crossover(prog_1, prog_2):
     offspring.append([Ne_cross, s_cross, mu_cross, fitness_cross])
 
   return offspring
+
