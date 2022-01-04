@@ -1,9 +1,14 @@
-import random as rnd
 import numpy as np
+import pandas as pd
+import random as rnd
 import math
 
+
 def fitness(Ne, s, mu):
-  k=(4*Ne*s*mu)/(1-math.exp(-4*Ne*s))
+  try:
+    k=(4*Ne*s*mu)/(1-math.exp(-4*Ne*s))
+  except ZeroDivisionError:
+    k=0
   return k
 
 
@@ -21,7 +26,7 @@ def population_generator(n):
     individual=[0,0,0,0]
     for j in range(len(individual)):
       individual[j]=int(abs(np.random.normal(mu_ne,sigma_ne)))
-      individual[j+1]=rnd.randint(0,100)/100
+      individual[j+1]=rnd.randint(0,90)/100
       individual[j+2]=abs(np.random.normal(mu_mut, sigma_mut))
       individual[j+3]=fitness(individual[j],individual[j+1],individual[j+2])
       break
@@ -49,9 +54,16 @@ def crossover(prog_1, prog_2):
 
   for i,m in enumerate(prog_1):
     f=prog_2[i]
-    Ne_cross=int((m[0] + f[0])/2)
-    s_cross=round((m[1] + f[1])/2,2)
-    mu_cross=(m[2] + f[2])/2
+    rnd_indexes=np.random.randint(2, size=3)
+
+    parents=[]
+    parents.append(m)
+    parents.append(f)
+
+    Ne_cross= parents[int(rnd_indexes[0])][0]
+    s_cross= parents[rnd_indexes[1]][1]
+    mu_cross= parents[rnd_indexes[2]][2]
+
     fitness_cross=fitness(Ne_cross, s_cross, mu_cross)
     offspring.append([Ne_cross, s_cross, mu_cross, fitness_cross])
 
