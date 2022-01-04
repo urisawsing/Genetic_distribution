@@ -1,6 +1,6 @@
 import numpy as np
 import random as rnd
-import mystuff as ms
+import functions as ms
 from matplotlib import pyplot as plt
 
 ##################################
