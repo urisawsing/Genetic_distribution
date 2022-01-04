@@ -1,6 +1,7 @@
 import numpy as np
 import random as rnd
 import mystuff as ms
+from matplotlib import pyplot as plt
 
 ##################################
 #  Genetic Algorithm in 7 steps  #
@@ -31,7 +32,7 @@ n_gen=10000
 
 #Track
 count=0
-
+savings=np.zeros((N,n_gen))
 generations=[]
 fitnesses=[]
 Ne_track=[]
@@ -78,20 +79,17 @@ while count<n_gen:
     mu_track.append(new_population[0][2])
     fitnesses.append(new_population[0][3])
 
+    ms.saving_data(savings,population,count)
+
     population=new_population
 
     count=count+1
  
 #Visualise the performance
-txt= 'Parameter values of the best solution:'+str(population[0])
-
-fig = plt.figure()
-ax = plt.axes()
-ax.plot(generations, fitnesses, linestyle='dashdot', color='orangered')
-ax.set(xlabel='Generations', ylabel='Fitness evolution',
-       title='Genetic Algorith: optimitzation of the K adaptation value');
-fig.text(.5, .05, txt, ha='center')
-plt.show()
+ms.plot_best_fitness(generations,population,fitnesses)
+#print(savings)
+ms.plot_all_fitness(savings,generations,n_elite,n_progenie)
     
+
 
 
