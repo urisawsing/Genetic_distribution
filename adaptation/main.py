@@ -1,132 +1,98 @@
 import numpy as np
-import pandas as pd
 import random as rnd
-import matplotlib.pyplot as plt
-import math
+import functions as ms
+from matplotlib import pyplot as plt
 
+##################################
+#  Genetic Algorithm in 7 steps  #
+##################################
 
-def saving_data(saved,population,step):
-  for i in range(len(saved)):
-    saved[i][step]=population[i][3]
+'''
+Parameters
+    -----------------------------------------------------------------
+    N:          integer
+                population size
+    n_elite:    integer
+                selected individuals to mantain in the new population
+                !! mus be pair
+    n_progenie: integer
+                number of selected indivudals to cross
+    n_bros:     integer
+                number of siblings to generate in each crossover
+    n_gen:      integer
+                generations to be run
+    -----------------------------------------------------------------
+'''
 
+#Parameters
+N=70
+n_elite=5
+n_progenie=30
+n_bros=2
+n_gen=5000
 
-def fitness(Ne, s, mu):
-  try:
-    k=(4*Ne*s*mu)/(1-math.exp(-4*Ne*s))
-  except ZeroDivisionError:
-    k=0
-  return k
+#Track
+count=0
+savings=np.zeros((N,n_gen))
+generations=[]
+fitnesses=[]
+Ne_track=[]
+s_track=[]
+mu_track=[]
 
+#1. Setting the original population
+population=ms.population_generator(N)
+for i in population:
+  population.sort(reverse=True, key=ms.fitness_sort)
 
-def plot_best_fitness(generations,population,fitnesses):
-  txt= 'Parameter values of the best solution:'+str(population[0])
-
-  fig = plt.figure()
-  ax = plt.axes()
-  ax.plot(generations, fitnesses, linestyle='dashdot', color='orangered')
-  ax.set(xlabel='Generations', ylabel='Fitness evolution',
-         title='Genetic Algorith: optimitzation of the K adaptation value');
-  fig.text(.5, .05, txt, ha='center')
-  plt.show()
-
-
-def plot_all_fitness(savings,generations,n_elite,n_offspring):
-  #txt= 'Parameter values of the best solution:'+str(population[0])
-
-  fig = plt.figure()
-  for i in range(len(savings)):
-    if i < n_elite:
-      plt.plot(generations, savings[:][i], linestyle='solid', color='orangered',)
-    if i > n_elite and i < (n_offspring + n_elite) :
-      plt.plot(generations, savings[:][i], linestyle='dotted', color='green',alpha=0.8)
-    if i > (n_offspring + n_elite):
-      plt.plot(generations, savings[:][i], linestyle='dotted', color='blue',alpha=0.6)
-  plt.show()
-  '''  
-  ax.set(xlabel='Generations', ylabel='Fitness evolution',
-         title='Genetic Algorith: optimitzation of the K adaptation value');
-  fig.text(.5, .05, txt, ha='center')
-  '''
+while count<n_gen:
     
+    #2. Selecting best individuals, the elite and the progeny
+    elite=population[0:n_elite]
+    progenie=population[n_elite:int(n_elite+n_progenie)]
+
+    #3. Generating the mutated gamets from the progeny
+    gamets=ms.mutation(progenie)
+
+    #4. Defining the breeding pattern
+    prog_1=gamets[0:int(n_progenie/2)]
+    prog_2=gamets[int(n_progenie/2):int(n_progenie+1)]
+
+    #5. Crossover of the gamets as times as the number of siblings specified
+    offspring=[]
+    for i in range(n_bros):
+      birth=ms.crossover(prog_1, prog_2)
+      offspring.append(birth)
+    offspring=sum(offspring, [])
+    n_offspring=len(offspring)
+
+    #6. Adding variation by migration from a new random generated population
+    n_migrants=int(N-n_elite-(n_progenie/2)*n_bros)
+    migrants=ms.population_generator(n_migrants)
+
+    #7. Setting the new population
+    new_population=[*elite, *offspring, *migrants]
+    ms.saving_data(savings,new_population,count)
+
+    for i in new_population:
+      new_population.sort(reverse=True, key=ms.fitness_sort)
+
+    generations.append(count)
+    Ne_track.append(new_population[0][0])
+    s_track.append(new_population[0][1])
+    mu_track.append(new_population[0][2])
+    fitnesses.append(new_population[0][3])
+
+
+    population=new_population
+
+    count=count+1
+ 
+#Visualise the performance
+#ms.plot_best_fitness(generations,population,fitnesses)
+ms.plot_parameter(generations, fitnesses, population[0], Ne_track, 'Ne')
+ms.plot_parameter(generations, fitnesses, population[0], s_track, 's')
+ms.plot_parameter(generations, fitnesses, population[0], mu_track, 'mu')
+
+ms.plot_all_fitness(savings,generations,n_elite,n_offspring)
     
-def plot_parameter(generations, fitnesses, best, parameter_track, parameter_name):
-  txt= 'Parameter values of the best solution:'+str(best)
-
-  fig, ax1 = plt.subplots()
-
-  color = 'orangered'
-  ax1.set_xlabel('Generations')
-  ax1.set_ylabel('Fitness evolution', color=color)
-  ax1.plot(generations, fitnesses, color=color)
-  ax1.tick_params(axis='y', labelcolor=color)
-
-  ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-  color = 'limegreen'
-  ax2.set_ylabel(parameter_name, color=color)  # we already handled the x-label with ax1
-  ax2.plot(generations, parameter_track, color=color, linestyle='dashdot')
-  ax2.tick_params(axis='y', labelcolor=color)
-
-  fig.tight_layout()  # otherwise the right y-label is slightly clipped
-  fig.text(.5, .05, txt, ha='center')
-  plt.show()
-
-
-def fitness_sort(n):
-  return n[3]
-
-
-def population_generator(n):
-  mu_ne, sigma_ne = 1000, 2000
-  mu_s, sigma_s = 0, 5
-  mu_mut, sigma_mut = 1e-3, 0.02
-
-  population=[]
-
-  for i in range(n):
-    individual=[0,0,0,0]
-    for j in range(len(individual)):
-      individual[j]=int(abs(np.random.normal(mu_ne,sigma_ne)))
-      individual[j+1]=int(rnd.randint(0,100)/100)
-      individual[j+2]=abs(np.random.normal(mu_mut, sigma_mut))
-      individual[j+3]=fitness(individual[j],individual[j+1],individual[j+2])
-      break
-    population.append(individual)
-
-  return population
-#rnd.randint(-100,100)/100
-
-
-def mutation(population):
-  
-  gamets=[]
-
-  for i in population:
-    Ne_mut=int(abs(np.random.normal(i[0], 50)))
-    s_mut=round(abs(np.random.normal(i[1], 0.05)),2)
-    mu_mut=abs(np.random.normal(i[2], 0.005))
-    gamets.append([Ne_mut, s_mut, mu_mut])
-
-  return gamets
-
-
-def crossover(prog_1, prog_2):
-
-  offspring=[]
-
-  for i,m in enumerate(prog_1):
-    f=prog_2[i]
-    rnd_indexes=np.random.randint(2, size=3)
-
-    parents=[]
-    parents.append(m)
-    parents.append(f)
-
-    Ne_cross= parents[int(rnd_indexes[0])][0]
-    s_cross= parents[rnd_indexes[1]][1]
-    mu_cross= parents[rnd_indexes[2]][2]
-
-    fitness_cross=fitness(Ne_cross, s_cross, mu_cross)
-    offspring.append([Ne_cross, s_cross, mu_cross, fitness_cross])
-
-  return offspring
