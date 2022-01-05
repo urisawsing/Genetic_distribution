@@ -14,7 +14,7 @@ Parameters
                 population size
     n_elite:    integer
                 selected individuals to mantain in the new population
-        !! mus be pair
+                !! mus be pair
     n_progenie: integer
                 number of selected indivudals to cross
     n_bros:     integer
@@ -23,12 +23,13 @@ Parameters
                 generations to be run
     -----------------------------------------------------------------
 '''
+
 #Parameters
 N=50
 n_elite=5
 n_progenie=20
 n_bros=2
-n_gen=10000
+n_gen=100
 
 #Track
 count=0
@@ -63,6 +64,7 @@ while count<n_gen:
       birth=ms.crossover(prog_1, prog_2)
       offspring.append(birth)
     offspring=sum(offspring, [])
+    n_offspring=len(offspring)
 
     #6. Adding variation by migration from a new random generated population
     n_migrants=int(N-n_elite-(n_progenie/2)*n_bros)
@@ -70,6 +72,8 @@ while count<n_gen:
 
     #7. Setting the new population
     new_population=[*elite, *offspring, *migrants]
+    ms.saving_data(savings,new_population,count)
+
     for i in new_population:
       new_population.sort(reverse=True, key=ms.fitness_sort)
 
@@ -79,17 +83,17 @@ while count<n_gen:
     mu_track.append(new_population[0][2])
     fitnesses.append(new_population[0][3])
 
-    ms.saving_data(savings,population,count)
 
     population=new_population
 
     count=count+1
  
 #Visualise the performance
-ms.plot_best_fitness(generations,population,fitnesses)
-#print(savings)
-ms.plot_all_fitness(savings,generations,n_elite,n_progenie)
+#ms.plot_best_fitness(generations,population,fitnesses)
+ms.plot_parameter(generations, fitnesses, population[0], Ne_track, 'Ne')
+ms.plot_parameter(generations, fitnesses, population[0], s_track, 's')
+ms.plot_parameter(generations, fitnesses, population[0], mu_track, 'mu')
+
+ms.plot_all_fitness(savings,generations,n_elite,n_offspring)
     
-
-
 
