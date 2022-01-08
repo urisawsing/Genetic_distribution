@@ -3,9 +3,9 @@ import random as rnd
 import functions as ms
 from matplotlib import pyplot as plt
 
-##################################
-#  Genetic Algorithm in 7 steps  #
-##################################
+###################################
+#  Genetic Algorithm: k function  #
+###################################
 
 '''
 Parameters
