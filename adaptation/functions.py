@@ -34,7 +34,7 @@ def plot_best_fitness(generations,population,fitnesses):
 
 
 def plot_all_fitness(savings,generations,n_elite,n_offspring):
-  txt= 'Parameter values of the best solution:'+str(population[0])
+  txt= 'Parameter values of the best solution:'+str(savings[0])
 
   fig = plt.figure()
   for i in range(len(savings)):
