@@ -34,7 +34,7 @@ def plot_best_fitness(generations,population,fitnesses):
 
 
 def plot_all_fitness(savings,generations,n_elite,n_offspring):
-  #txt= 'Parameter values of the best solution:'+str(population[0])
+  txt= 'Parameter values of the best solution:'+str(population[0])
 
   fig = plt.figure()
   for i in range(len(savings)):
@@ -45,11 +45,10 @@ def plot_all_fitness(savings,generations,n_elite,n_offspring):
     if i > (n_offspring + n_elite):
       plt.plot(generations, savings[:][i], linestyle='dotted', color='blue',alpha=0.6)
   plt.show()
-  '''  
+  
   ax.set(xlabel='Generations', ylabel='Fitness evolution',
          title='Genetic Algorith: optimitzation of the K adaptation value');
   fig.text(.5, .05, txt, ha='center')
-  '''
 
 def plot_parameter(generations, fitnesses, best, parameter_track, parameter_name):
   txt= 'Parameter values of the best solution:'+str(best)
