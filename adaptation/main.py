@@ -94,5 +94,6 @@ ms.plot_parameter(generations, fitnesses, population[0], Ne_track, 'Ne')
 ms.plot_parameter(generations, fitnesses, population[0], s_track, 's')
 ms.plot_parameter(generations, fitnesses, population[0], mu_track, 'mu')
 
-ms.plot_all_fitness(savings,generations,n_elite,n_offspring)
+ms.plot_all_fitness(savings,generations,n_elite,n_offspring,population[0])
     
+
