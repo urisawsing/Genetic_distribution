@@ -33,10 +33,11 @@ def plot_best_fitness(generations,population,fitnesses):
   plt.show()
 
 
-def plot_all_fitness(savings,generations,n_elite,n_offspring):
-  txt= 'Parameter values of the best solution:'+str(savings[0])
+def plot_all_fitness(savings,generations,n_elite,n_offspring,population):
+  txt= 'Generations \n Parameter values of the best solution:'+str(population)
 
-  fig = plt.figure()
+  fig, ax = plt.subplots()
+  #ax = plt.axes()
   for i in range(len(savings)):
     if i < n_elite:
       plt.plot(generations, savings[:][i], linestyle='solid', color='orangered',)
@@ -44,11 +45,11 @@ def plot_all_fitness(savings,generations,n_elite,n_offspring):
       plt.plot(generations, savings[:][i], linestyle='dotted', color='green',alpha=0.8)
     if i > (n_offspring + n_elite):
       plt.plot(generations, savings[:][i], linestyle='dotted', color='blue',alpha=0.6)
+  plt.grid()
+  ax.set_xlabel(txt)
+  ax.set(ylabel='Fitness evolution',
+         title='Genetic Algorith: The Evolution\'s rhythm')
   plt.show()
-  
-  ax.set(xlabel='Generations', ylabel='Fitness evolution',
-         title='Genetic Algorith: optimitzation of the K adaptation value');
-  fig.text(.5, .05, txt, ha='center')
 
 def plot_parameter(generations, fitnesses, best, parameter_track, parameter_name):
   txt= 'Parameter values of the best solution:'+str(best)
@@ -61,7 +62,7 @@ def plot_parameter(generations, fitnesses, best, parameter_track, parameter_name
   ax1.plot(generations, fitnesses, color=color)
   ax1.tick_params(axis='y', labelcolor=color)
 
-  ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+  ax2 = ax1.twinx()
 
   color = 'limegreen'
   ax2.set_ylabel(parameter_name, color=color)  # we already handled the x-label with ax1
@@ -153,4 +154,5 @@ def crossover(prog_1, prog_2):
     offspring.append([Ne_cross, s_cross, mu_cross, fitness_cross])
 
   return offspring
+
 
